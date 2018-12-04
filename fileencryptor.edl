@@ -1,0 +1,34 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+enclave {
+
+    include "../shared.h"
+
+    trusted {
+        public int initialize_encryptor( bool encrypt, 
+                                        [in, count=password_len] const char* password, 
+                                        size_t password_len, 
+                                        [in, out] encryption_header_t *header); 
+        
+        public int encrypt_block(bool encrypt, 
+                                        [in, count=size] unsigned char* input_buf, 
+                                        [out, count=size] unsigned char* output_buf, 
+                                        size_t size, int type);
+
+        public void close_encryptor();
+	public void inference_engine(int batch_size, [user_check] int *res);
+	public void initialize_parameters(int batch_size, int network_size);
+	public void initialize_image_and_params_file(int image_size, int params_size);
+    };
+
+    untrusted {
+    //    no untrusted functions in this sample
+	void ocall_print_string([in, string] char *msg);
+	void ocall_print_int(int val);
+	void ocall_error([in, string] char *msg);
+	void ocall_print_double(double val);
+    };
+};
+
+
